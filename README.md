@@ -46,7 +46,7 @@ Use "msgenctl [command] --help" for more information about a command.
 
 ### Examples
 
-Submit a workflow
+#### Submit a workflow
 
 ```sh
 msgenctl submit \
