@@ -1,5 +1,7 @@
 # msgenctl
 
+[![CI status](https://github.com/stjudecloud/msgenctl/workflows/CI/badge.svg)](https://github.com/stjudecloud/msgenctl/actions/workflows/ci.yml)
+
 **msgenctl** is a CLI to manage [Microsoft Genomics] workflows.
 
 [Microsoft Genomics]: https://azure.microsoft.com/en-us/services/genomics/
