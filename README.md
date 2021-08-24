@@ -34,6 +34,7 @@ Available Commands:
   completion  generate the autocompletion script for the specified shell
   status      prints the status a workflow or all workflows
   submit      submits a new workflow
+  wait        polls until the completion of a workflow
 
 Flags:
       --access-key string   Microsoft Genomics API access key
@@ -74,6 +75,12 @@ msgenctl status --base-url $MSGEN_BASE_URL --access-key $MSGEN_ACCESS_KEY 10000
 
 ```sh
 msgenctl status --base-url $MSGEN_BASE_URL --access-key $MSGEN_ACCESS_KEY
+```
+
+#### Wait until a workflow completes
+
+```sh
+msgenctl wait --base-url $MSGEN_BASE_URL --access-key $MSGEN_ACCESS_KEY 10000
 ```
 
 #### Cancel a workflow
