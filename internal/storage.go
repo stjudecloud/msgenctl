@@ -10,6 +10,9 @@ import (
 	"go.uber.org/zap"
 )
 
+const defaultEndpointsProtocol = "https"
+const endpointSuffix = "core.windows.net"
+
 const sasLifetime = 72 * time.Hour
 
 type BlobServiceClient struct {
@@ -40,7 +43,10 @@ func NewBlobServiceClient(accountName string, accountKey string) (BlobServiceCli
 
 func newServiceURL(credential *azblob.SharedKeyCredential) (*azblob.ServiceURL, error) {
 	accountName := credential.AccountName()
-	baseURL, err := url.Parse(fmt.Sprintf("https://%s.blob.core.windows.net", accountName))
+	baseURL, err := url.Parse(fmt.Sprintf(
+		"%s://%s.blob.%s",
+		defaultEndpointsProtocol, accountName, endpointSuffix,
+	))
 
 	if err != nil {
 		return nil, err
@@ -84,9 +90,15 @@ func (c *BlobServiceClient) GenerateBlobSAS(
 	}
 
 	blobURL := fmt.Sprintf(
-		"https://%s.blob.core.windows.net/%s/%s?%s",
-		c.credential.AccountName(), containerName, blobName, sas,
+		"%s://%s.blob.%s/%s/%s?%s",
+		defaultEndpointsProtocol,
+		endpointSuffix,
+		c.credential.AccountName(),
+		containerName,
+		blobName,
+		sas,
 	)
+
 	zap.S().Debugw("generated blob URL", "url", blobURL)
 
 	return sas, nil
@@ -119,11 +131,16 @@ func (c *BlobServiceClient) GenerateContainerSAS(
 		return "", err
 	}
 
-	blobURL := fmt.Sprintf(
-		"https://%s.blob.core.windows.net/%s?%s",
-		c.credential.AccountName(), containerName, sas,
+	containerURL := fmt.Sprintf(
+		"%s://%s.blob.%s/%s?%s",
+		defaultEndpointsProtocol,
+		endpointSuffix,
+		c.credential.AccountName(),
+		containerName,
+		sas,
 	)
-	zap.S().Debugw("generated container URL", "url", blobURL)
+
+	zap.S().Debugw("generated container URL", "url", containerURL)
 
 	return sas, nil
 }
