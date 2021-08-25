@@ -10,7 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const SASLifetime = 72 * time.Hour
+const sasLifetime = 72 * time.Hour
 
 type BlobServiceClient struct {
 	credential azblob.SharedKeyCredential
@@ -60,7 +60,7 @@ func (c *BlobServiceClient) GenerateBlobSAS(
 	permissions azblob.BlobSASPermissions,
 ) (string, error) {
 	now := time.Now().UTC()
-	expiryTime := now.Add(SASLifetime)
+	expiryTime := now.Add(sasLifetime)
 
 	values := azblob.BlobSASSignatureValues{
 		Protocol:      azblob.SASProtocolHTTPS,
@@ -97,7 +97,7 @@ func (c *BlobServiceClient) GenerateContainerSAS(
 	permissions azblob.ContainerSASPermissions,
 ) (string, error) {
 	now := time.Now().UTC()
-	expiryTime := now.Add(SASLifetime)
+	expiryTime := now.Add(sasLifetime)
 
 	values := azblob.BlobSASSignatureValues{
 		Protocol:      azblob.SASProtocolHTTPS,
