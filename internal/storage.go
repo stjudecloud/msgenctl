@@ -18,7 +18,6 @@ const sasLifetime = 72 * time.Hour
 
 type BlobServiceClient struct {
 	credential azblob.SharedKeyCredential
-	serviceURL azblob.ServiceURL
 }
 
 func NewBlobServiceClient(accountName string, accountKey string) (BlobServiceClient, error) {
@@ -30,35 +29,9 @@ func NewBlobServiceClient(accountName string, accountKey string) (BlobServiceCli
 		return client, err
 	}
 
-	serviceURL, err := newServiceURL(credential)
-
-	if err != nil {
-		return client, err
-	}
-
 	client.credential = *credential
-	client.serviceURL = *serviceURL
 
 	return client, nil
-}
-
-func newServiceURL(credential *azblob.SharedKeyCredential) (*azblob.ServiceURL, error) {
-	accountName := credential.AccountName()
-	baseURL, err := url.Parse(fmt.Sprintf(
-		"%s://%s.blob.%s",
-		defaultEndpointsProtocol, accountName, endpointSuffix,
-	))
-
-	if err != nil {
-		return nil, err
-	}
-
-	options := azblob.PipelineOptions{}
-	pipeline := azblob.NewPipeline(credential, options)
-
-	serviceURL := azblob.NewServiceURL(*baseURL, pipeline)
-
-	return &serviceURL, nil
 }
 
 func (c *BlobServiceClient) GenerateBlobSAS(
