@@ -104,3 +104,24 @@ func TestEncodeOrdered(t *testing.T) {
 		t.Errorf("query missing starting `sv` key: %s", sas)
 	}
 }
+
+func TestParseConnectionString(t *testing.T) {
+	s := "AccountName=msgenctl;AccountKey=secret;DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;BlobEndpoint=https://localhost/msgenctl"
+	actual, err := ParseConnectionString(s)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expected := ConnectionString{
+		AccountName:              "msgenctl",
+		AccountKey:               "secret",
+		DefaultEndpointsProtocol: "https",
+		EndpointSuffix:           "core.windows.net",
+		BlobEndpoint:             "https://localhost/msgenctl",
+	}
+
+	if diff := cmp.Diff(actual, expected); len(diff) != 0 {
+		t.Errorf("connection string mismatch (-actual, +expected):\n%s", diff)
+	}
+}

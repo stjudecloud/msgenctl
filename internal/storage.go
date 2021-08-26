@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 	"strings"
@@ -176,4 +177,58 @@ func encodeOrdered(p *azblob.SASQueryParameters) (string, error) {
 	buf.WriteString(values.Encode())
 
 	return buf.String(), nil
+}
+
+type ConnectionString struct {
+	AccountName              string
+	AccountKey               string
+	DefaultEndpointsProtocol string
+	EndpointSuffix           string
+	BlobEndpoint             string
+}
+
+func ParseConnectionString(s string) (ConnectionString, error) {
+	const delimiter = ";"
+	const componentSeparator = "="
+	const maxComponents = 2
+
+	connectionString := ConnectionString{}
+
+	if len(s) == 0 {
+		return connectionString, errors.New("invalid connection string: empty input")
+	}
+
+	rawFields := strings.Split(strings.TrimRight(s, delimiter), delimiter)
+
+	for _, rawField := range rawFields {
+		if len(rawField) == 0 {
+			return connectionString, errors.New("invalid connection string: contains an empty field")
+		}
+
+		components := strings.SplitN(rawField, componentSeparator, maxComponents)
+		key := components[0]
+
+		if len(components) != 2 {
+			return connectionString, fmt.Errorf("invalid connection string: %s is missing a value", key)
+		}
+
+		value := components[1]
+
+		switch key {
+		case "AccountName":
+			connectionString.AccountName = value
+		case "AccountKey":
+			connectionString.AccountKey = value
+		case "DefaultEndpointsProtocol":
+			connectionString.DefaultEndpointsProtocol = value
+		case "EndpointSuffix":
+			connectionString.EndpointSuffix = value
+		case "BlobEndpoint":
+			connectionString.BlobEndpoint = value
+		default:
+			return connectionString, fmt.Errorf("invalid connection string: unknown key: %s", key)
+		}
+	}
+
+	return connectionString, nil
 }
