@@ -106,7 +106,7 @@ func TestEncodeOrdered(t *testing.T) {
 }
 
 func TestParseConnectionString(t *testing.T) {
-	s := "AccountName=msgenctl;AccountKey=secret;DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;BlobEndpoint=https://localhost/msgenctl"
+	s := "AccountName=msgenctl;AccountKey=secret;DefaultEndpointsProtocol=https;"
 	actual, err := ParseConnectionString(s)
 
 	if err != nil {
@@ -114,11 +114,8 @@ func TestParseConnectionString(t *testing.T) {
 	}
 
 	expected := ConnectionString{
-		AccountName:              "msgenctl",
-		AccountKey:               "secret",
-		DefaultEndpointsProtocol: "https",
-		EndpointSuffix:           "core.windows.net",
-		BlobEndpoint:             "https://localhost/msgenctl",
+		AccountName: "msgenctl",
+		AccountKey:  "secret",
 	}
 
 	if diff := cmp.Diff(actual, expected); len(diff) != 0 {

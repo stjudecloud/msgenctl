@@ -126,11 +126,8 @@ func encodeOrdered(p *azblob.SASQueryParameters) (string, error) {
 }
 
 type ConnectionString struct {
-	AccountName              string
-	AccountKey               string
-	DefaultEndpointsProtocol string
-	EndpointSuffix           string
-	BlobEndpoint             string
+	AccountName string
+	AccountKey  string
 }
 
 func ParseConnectionString(s string) (ConnectionString, error) {
@@ -165,14 +162,8 @@ func ParseConnectionString(s string) (ConnectionString, error) {
 			connectionString.AccountName = value
 		case "AccountKey":
 			connectionString.AccountKey = value
-		case "DefaultEndpointsProtocol":
-			connectionString.DefaultEndpointsProtocol = value
-		case "EndpointSuffix":
-			connectionString.EndpointSuffix = value
-		case "BlobEndpoint":
-			connectionString.BlobEndpoint = value
 		default:
-			return connectionString, fmt.Errorf("invalid connection string: unknown key: %s", key)
+			continue
 		}
 	}
 
