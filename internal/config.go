@@ -214,23 +214,21 @@ func storageConfigFromFlags(flags *pflag.FlagSet, prefix string) (StorageConfig,
 
 	config := StorageConfig{}
 
-	key = fmt.Sprintf("%v-storage-account-name", prefix)
-	accountName, err := flags.GetString(key)
+	key = fmt.Sprintf("%v-storage-connection-string", prefix)
+	rawConnectionString, err := flags.GetString(key)
 
 	if err != nil {
 		return config, err
 	}
 
-	config.AccountName = accountName
-
-	key = fmt.Sprintf("%v-storage-account-key", prefix)
-	accountKey, err := flags.GetString(key)
+	connectionString, err := ParseConnectionString(rawConnectionString)
 
 	if err != nil {
 		return config, err
 	}
 
-	config.AccountKey = accountKey
+	config.AccountName = connectionString.AccountName
+	config.AccountKey = connectionString.AccountKey
 
 	key = fmt.Sprintf("%v-storage-container-name", prefix)
 	containerName, err := flags.GetString(key)

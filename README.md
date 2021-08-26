@@ -56,12 +56,10 @@ msgenctl submit \
     --process-name snapgatk \
     --process-args R=hg38m1x \
     --description sample \
-    --input-storage-account-name $MSGEN_STORAGE_ACCOUNT_NAME \
-    --input-storage-account-key $MSGEN_STORAGE_ACCOUNT_KEY \
+    --input-storage-connection-string "$MSGEN_STORAGE_CONNECTION_STRING" \
     --input-storage-container-name $MSGEN_STORAGE_CONTAINER_NAME \
     --input-blob-name sample.bam \
-    --output-storage-account-name $MSGEN_STORAGE_ACCOUNT_NAME \
-    --output-storage-account-key $MSGEN_STORAGE_ACCOUNT_KEY \
+    --output-storage-connection-string "$MSGEN_STORAGE_CONNECTION_STRING" \
     --output-storage-container-name $MSGEN_STORAGE_CONTAINER_NAME
 ```
 
@@ -94,5 +92,5 @@ msgenctl cancel --base-url $MSGEN_BASE_URL --access-key $MSGEN_ACCESS_KEY 10000
   * Input (`--input-blob-name`) is expected to be a single BAM blob. A SAS is
     automatically generated for it.
 
-  * The input Azure Storage account (`--input-storage-account-name`) must be in
-    the same region as the Microsoft Genomics service (`--base-url`).
+  * The input Azure Storage account must be in the same region as the Microsoft
+    Genomics service (`--base-url`).

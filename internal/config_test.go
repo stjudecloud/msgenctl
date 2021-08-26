@@ -13,13 +13,11 @@ func TestSubmitConfigFromFlags(t *testing.T) {
 	accessKey := flags.String("access-key", "", "")
 	processName := flags.String("process-name", "", "")
 	processArgs := flags.String("process-args", "", "")
-	inputStorageAccountName := flags.String("input-storage-account-name", "", "")
-	inputStorageAccountKey := flags.String("input-storage-account-key", "", "")
+	flags.String("input-storage-connection-string", "", "")
 	inputStorageContainerName := flags.String("input-storage-container-name", "", "")
 	inputBlobName := flags.String("input-blob-name", "", "")
 	description := flags.String("description", "", "")
-	outputStorageAccountName := flags.String("output-storage-account-name", "", "")
-	outputStorageAccountKey := flags.String("output-storage-account-key", "", "")
+	flags.String("output-storage-connection-string", "", "")
 	outputStorageContainerName := flags.String("output-storage-container-name", "", "")
 	outputBasename := flags.String("output-basename", "", "")
 	overwrite := flags.Bool("output-overwrite", false, "")
@@ -32,13 +30,11 @@ func TestSubmitConfigFromFlags(t *testing.T) {
 		"--access-key", "secret",
 		"--process-name", "snapgatk-20190409_1",
 		"--process-args", "R=hg38m1x",
-		"--input-storage-account-name", "input-store",
-		"--input-storage-account-key", "input-store-key",
+		"--input-storage-connection-string", "AccountName=input;AccountKey=input-secret;",
 		"--input-storage-container-name", "data",
 		"--input-blob-name", "sample.bam",
 		"--description", "sample run",
-		"--output-storage-account-name", "output-store",
-		"--output-storage-account-key", "output-store-key",
+		"--output-storage-connection-string", "AccountName=output;AccountKey=output-secret;",
 		"--output-storage-container-name", "results",
 		"--output-basename", "sample",
 		"--output-overwrite",
@@ -64,8 +60,8 @@ func TestSubmitConfigFromFlags(t *testing.T) {
 		},
 		Input: InputConfig{
 			Storage: StorageConfig{
-				AccountName:   *inputStorageAccountName,
-				AccountKey:    *inputStorageAccountKey,
+				AccountName:   "input",
+				AccountKey:    "input-secret",
 				ContainerName: *inputStorageContainerName,
 			},
 			BlobName: *inputBlobName,
@@ -77,8 +73,8 @@ func TestSubmitConfigFromFlags(t *testing.T) {
 		Description: *description,
 		Output: OutputConfig{
 			Storage: StorageConfig{
-				AccountName:   *outputStorageAccountName,
-				AccountKey:    *outputStorageAccountKey,
+				AccountName:   "output",
+				AccountKey:    "output-secret",
 				ContainerName: *outputStorageContainerName,
 			},
 			Basename:   *outputBasename,

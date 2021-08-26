@@ -20,16 +20,14 @@ func init() {
 	flags.String("process-args", "", "process arguments")
 
 	// input
-	flags.String("input-storage-account-name", "", "input Azure Storage account name")
-	flags.String("input-storage-account-key", "", "input Azure Storage account key")
+	flags.String("input-storage-connection-string", "", "input Azure Storage connection string")
 	flags.String("input-storage-container-name", "", "input Azure Storage container name")
 	flags.String("input-blob-name", "", "input blob name")
 
 	flags.String("description", "", "workflow description")
 
 	// output
-	flags.String("output-storage-account-name", "", "output Azure Storage account name")
-	flags.String("output-storage-account-key", "", "output Azure Storage account key")
+	flags.String("output-storage-connection-string", "", "output Azure Storage connection string")
 	flags.String("output-storage-container-name", "", "output Azure Storage container name")
 	flags.String("output-basename", "", "output basename")
 	flags.Bool("output-overwrite", false, "overwrite outputs")
