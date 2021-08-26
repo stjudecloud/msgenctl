@@ -8,11 +8,7 @@ import (
 	"time"
 
 	"github.com/Azure/azure-storage-blob-go/azblob"
-	"go.uber.org/zap"
 )
-
-const defaultEndpointsProtocol = "https"
-const endpointSuffix = "core.windows.net"
 
 const sasLifetime = 72 * time.Hour
 
@@ -63,18 +59,6 @@ func (c *BlobServiceClient) GenerateBlobSAS(
 		return "", err
 	}
 
-	blobURL := fmt.Sprintf(
-		"%s://%s.blob.%s/%s/%s?%s",
-		defaultEndpointsProtocol,
-		endpointSuffix,
-		c.credential.AccountName(),
-		containerName,
-		blobName,
-		sas,
-	)
-
-	zap.S().Debugw("generated blob URL", "url", blobURL)
-
 	return sas, nil
 }
 
@@ -104,17 +88,6 @@ func (c *BlobServiceClient) GenerateContainerSAS(
 	if err != nil {
 		return "", err
 	}
-
-	containerURL := fmt.Sprintf(
-		"%s://%s.blob.%s/%s?%s",
-		defaultEndpointsProtocol,
-		endpointSuffix,
-		c.credential.AccountName(),
-		containerName,
-		sas,
-	)
-
-	zap.S().Debugw("generated container URL", "url", containerURL)
 
 	return sas, nil
 }
