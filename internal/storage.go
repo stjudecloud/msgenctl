@@ -39,7 +39,6 @@ func (c *BlobServiceClient) GenerateBlobSAS(
 	expiryTime := now.Add(sasLifetime)
 
 	values := azblob.BlobSASSignatureValues{
-		Protocol:      azblob.SASProtocolHTTPS,
 		StartTime:     now,
 		ExpiryTime:    expiryTime,
 		ContainerName: containerName,
@@ -70,7 +69,6 @@ func (c *BlobServiceClient) GenerateContainerSAS(
 	expiryTime := now.Add(sasLifetime)
 
 	values := azblob.BlobSASSignatureValues{
-		Protocol:      azblob.SASProtocolHTTPS,
 		StartTime:     now,
 		ExpiryTime:    expiryTime,
 		ContainerName: containerName,
