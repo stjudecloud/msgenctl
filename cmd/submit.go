@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 	"github.com/stjudecloud/msgenctl/internal"
 	"go.uber.org/zap"
@@ -60,7 +62,7 @@ func submit(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	printWorkflow(workflow)
+	fmt.Println(workflow.ID)
 
 	return nil
 }
