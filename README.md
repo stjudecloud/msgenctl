@@ -6,12 +6,6 @@
 
 [Microsoft Genomics]: https://azure.microsoft.com/en-us/services/genomics/
 
-## Prerequisites
-
-  * [Go] 1.17+
-
-[Go]: https://golang.org/
-
 ## Install
 
 [Precompiled binaries] of msgenctl are built for Linux distributions
