@@ -66,7 +66,7 @@ msgenctl submit \
 #### Show the status of a workflow
 
 ```sh
-msgenctl status --base-url $MSGEN_BASE_URL --access-key $MSGEN_ACCESS_KEY 10000
+msgenctl status --base-url $MSGEN_BASE_URL --access-key $MSGEN_ACCESS_KEY <workflow-id>
 ```
 
 #### Show the statuses of all workflow
@@ -78,13 +78,13 @@ msgenctl status --base-url $MSGEN_BASE_URL --access-key $MSGEN_ACCESS_KEY
 #### Wait until a workflow completes
 
 ```sh
-msgenctl wait --base-url $MSGEN_BASE_URL --access-key $MSGEN_ACCESS_KEY 10000
+msgenctl wait --base-url $MSGEN_BASE_URL --access-key $MSGEN_ACCESS_KEY <workflow-id>
 ```
 
 #### Cancel a workflow
 
 ```sh
-msgenctl cancel --base-url $MSGEN_BASE_URL --access-key $MSGEN_ACCESS_KEY 10000
+msgenctl cancel --base-url $MSGEN_BASE_URL --access-key $MSGEN_ACCESS_KEY <workflow-id>
 ```
 
 ## Limitations
