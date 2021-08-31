@@ -12,7 +12,12 @@
 
 [Go]: https://golang.org/
 
-## Quickstart
+## Install
+
+[Precompiled binaries] of msgenctl are built for Linux distributions
+(`linux/amd64`), macOS (`darwin/amd64`), and Windows (`windows/amd64`).
+
+Alternatively, it can be compiled from source.
 
 ```bash
 $ git clone https://github.com/stjudecloud/msgenctl
@@ -20,6 +25,8 @@ $ cd msgenctl
 $ go build
 $ ./msgenctl --help
 ```
+
+[Precompiled binaries]: https://github.com/stjudecloud/msgenctl/releases
 
 ## Usage
 
