@@ -8,12 +8,9 @@ COPY go.* main.go ./
 
 RUN CGO_ENABLED=0 go build
 
-FROM alpine:3.14.2
+FROM scratch
 
-ENV PATH=/opt/msgenctl/bin:$PATH
-COPY --from=builder /opt/msgenctl/msgenctl /opt/msgenctl/bin/msgenctl
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY --from=builder /opt/msgenctl/msgenctl /msgenctl
 
-# Added for workflow runners.
-RUN apk add --no-cache bash
-
-ENTRYPOINT ["/opt/msgenctl/bin/msgenctl"]
+ENTRYPOINT ["/msgenctl"]
