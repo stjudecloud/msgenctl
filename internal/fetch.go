@@ -102,19 +102,7 @@ func buildSubmitWorkflowPayload(config SubmitConfig) (NewWorkflow, error) {
 		return newWorkflow, err
 	}
 
-	outputBlobServiceClient, err := NewBlobServiceClient(
-		config.Input.Storage.AccountName,
-		config.Input.Storage.AccountKey,
-	)
-
-	if err != nil {
-		return newWorkflow, err
-	}
-
-	containerSAS, err := outputBlobServiceClient.GenerateContainerSAS(
-		config.Output.Storage.ContainerName,
-		azblob.ContainerSASPermissions{Delete: true, Read: true, Write: true},
-	)
+	containerSAS, err := generateOutputContainerSAS(config.Output)
 
 	if err != nil {
 		return newWorkflow, err
@@ -171,4 +159,20 @@ func generateInputBlobSAS(config InputConfig) (string, error) {
 	blobNameWithSAS := fmt.Sprintf("%s?%s", blobName, blobSAS)
 
 	return blobNameWithSAS, nil
+}
+
+func generateOutputContainerSAS(config OutputConfig) (string, error) {
+	outputBlobServiceClient, err := NewBlobServiceClient(
+		config.Storage.AccountName,
+		config.Storage.AccountKey,
+	)
+
+	if err != nil {
+		return "", err
+	}
+
+	return outputBlobServiceClient.GenerateContainerSAS(
+		config.Storage.ContainerName,
+		azblob.ContainerSASPermissions{Delete: true, Read: true, Write: true},
+	)
 }
