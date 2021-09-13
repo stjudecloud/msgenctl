@@ -96,27 +96,11 @@ func decodeJSON(reader io.Reader, value interface{}) error {
 func buildSubmitWorkflowPayload(config SubmitConfig) (NewWorkflow, error) {
 	newWorkflow := NewWorkflow{}
 
-	inputBlobServiceClient, err := NewBlobServiceClient(
-		config.Input.Storage.AccountName,
-		config.Input.Storage.AccountKey,
-	)
+	blobNameWithSAS, err := generateInputBlobSAS(config.Input)
 
 	if err != nil {
 		return newWorkflow, err
 	}
-
-	blobName := config.Input.BlobName
-	blobSAS, err := inputBlobServiceClient.GenerateBlobSAS(
-		config.Input.Storage.ContainerName,
-		blobName,
-		azblob.BlobSASPermissions{Read: true},
-	)
-
-	if err != nil {
-		return newWorkflow, err
-	}
-
-	blobNameWithSAS := fmt.Sprintf("%s?%s", blobName, blobSAS)
 
 	outputBlobServiceClient, err := NewBlobServiceClient(
 		config.Input.Storage.AccountName,
@@ -143,7 +127,7 @@ func buildSubmitWorkflowPayload(config SubmitConfig) (NewWorkflow, error) {
 	newWorkflow.InputArgs = NewWorkflowInputArgs{
 		AccountName:      config.Input.Storage.AccountName,
 		ContainerName:    config.Input.Storage.ContainerName,
-		BlobNames:        blobName,
+		BlobNames:        config.Input.BlobName,
 		BlobNamesWithSAS: blobNameWithSAS,
 	}
 	newWorkflow.OutputStorageType = StorageKindAzureBlockBlob
@@ -161,4 +145,30 @@ func buildSubmitWorkflowPayload(config SubmitConfig) (NewWorkflow, error) {
 	}
 
 	return newWorkflow, nil
+}
+
+func generateInputBlobSAS(config InputConfig) (string, error) {
+	inputBlobServiceClient, err := NewBlobServiceClient(
+		config.Storage.AccountName,
+		config.Storage.AccountKey,
+	)
+
+	if err != nil {
+		return "", err
+	}
+
+	blobName := config.BlobName
+	blobSAS, err := inputBlobServiceClient.GenerateBlobSAS(
+		config.Storage.ContainerName,
+		blobName,
+		azblob.BlobSASPermissions{Read: true},
+	)
+
+	if err != nil {
+		return "", err
+	}
+
+	blobNameWithSAS := fmt.Sprintf("%s?%s", blobName, blobSAS)
+
+	return blobNameWithSAS, nil
 }
