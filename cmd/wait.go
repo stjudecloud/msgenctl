@@ -60,7 +60,7 @@ func wait(cmd *cobra.Command, args []string) error {
 			return err
 		}
 
-		logger.Infow("wait", "status", workflow.Status)
+		logger.Infow("wait", "status", workflow.Status, "message", workflow.Message)
 
 		if isDone(workflow.Status) {
 			break
