@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -62,14 +63,15 @@ func wait(cmd *cobra.Command, args []string) error {
 
 		logger.Infow("wait", "status", workflow.Status, "message", workflow.Message)
 
-		if isDone(workflow.Status) {
-			break
+		switch workflow.Status {
+		case internal.StatusSuccess:
+			return nil
+		case internal.StatusFailed, internal.StatusCancelled:
+			return fmt.Errorf("workflow unsuccessful: %d: %s", workflow.Status, workflow.Message)
+		default:
+			time.Sleep(interval)
 		}
-
-		time.Sleep(interval)
 	}
-
-	return nil
 }
 
 func intervalFromFlags(flags *pflag.FlagSet) (time.Duration, error) {
@@ -82,10 +84,4 @@ func intervalFromFlags(flags *pflag.FlagSet) (time.Duration, error) {
 	interval := time.Duration(rawInterval) * time.Second
 
 	return interval, nil
-}
-
-func isDone(status internal.Status) bool {
-	return status == internal.StatusSuccess ||
-		status == internal.StatusFailed ||
-		status == internal.StatusCancelled
 }
