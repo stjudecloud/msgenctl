@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+  * internal/client: Retry on failed HTTP requests.
+
 ## 0.2.0 - 2021-09-15
 
 ### Changed
