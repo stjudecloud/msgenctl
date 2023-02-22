@@ -7,13 +7,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Azure/azure-storage-blob-go/azblob"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
 )
 
 const sasLifetime = 72 * time.Hour
 
 type BlobServiceClient struct {
-	credential azblob.SharedKeyCredential
+	credential *azblob.SharedKeyCredential
 }
 
 func NewBlobServiceClient(accountName string, accountKey string) (BlobServiceClient, error) {
@@ -25,7 +26,7 @@ func NewBlobServiceClient(accountName string, accountKey string) (BlobServiceCli
 		return client, err
 	}
 
-	client.credential = *credential
+	client.credential = credential
 
 	return client, nil
 }
@@ -33,12 +34,12 @@ func NewBlobServiceClient(accountName string, accountKey string) (BlobServiceCli
 func (c *BlobServiceClient) GenerateBlobSAS(
 	containerName string,
 	blobName string,
-	permissions azblob.BlobSASPermissions,
+	permissions sas.BlobPermissions,
 ) (string, error) {
 	now := time.Now().UTC()
 	expiryTime := now.Add(sasLifetime)
 
-	values := azblob.BlobSASSignatureValues{
+	values := sas.BlobSignatureValues{
 		StartTime:     now,
 		ExpiryTime:    expiryTime,
 		ContainerName: containerName,
@@ -46,7 +47,7 @@ func (c *BlobServiceClient) GenerateBlobSAS(
 		Permissions:   permissions.String(),
 	}
 
-	queryParams, err := values.NewSASQueryParameters(c.credential)
+	queryParams, err := values.SignWithSharedKey(c.credential)
 
 	if err != nil {
 		return "", err
@@ -63,19 +64,19 @@ func (c *BlobServiceClient) GenerateBlobSAS(
 
 func (c *BlobServiceClient) GenerateContainerSAS(
 	containerName string,
-	permissions azblob.ContainerSASPermissions,
+	permissions sas.ContainerPermissions,
 ) (string, error) {
 	now := time.Now().UTC()
 	expiryTime := now.Add(sasLifetime)
 
-	values := azblob.BlobSASSignatureValues{
+	values := sas.BlobSignatureValues{
 		StartTime:     now,
 		ExpiryTime:    expiryTime,
 		ContainerName: containerName,
 		Permissions:   permissions.String(),
 	}
 
-	queryParams, err := values.NewSASQueryParameters(c.credential)
+	queryParams, err := values.SignWithSharedKey(c.credential)
 
 	if err != nil {
 		return "", err
@@ -95,7 +96,7 @@ func (c *BlobServiceClient) GenerateContainerSAS(
 //
 // Microsoft Genomics requires the `signedversion` key to be first in the SAS;
 // otherwise, the service mysteriously replies with an HTTP 500.
-func encodeOrdered(p *azblob.SASQueryParameters) (string, error) {
+func encodeOrdered(p *sas.QueryParameters) (string, error) {
 	const signedVersionKey = "sv"
 
 	values, err := url.ParseQuery(p.Encode())

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/Azure/azure-storage-blob-go/azblob"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
 )
 
 func CancelWorkflow(client Client, ID WorkflowID) (Workflow, error) {
@@ -149,7 +149,7 @@ func generateInputBlobSAS(config InputConfig) (string, error) {
 	blobSAS, err := inputBlobServiceClient.GenerateBlobSAS(
 		config.Storage.ContainerName,
 		blobName,
-		azblob.BlobSASPermissions{Read: true},
+		sas.BlobPermissions{Read: true},
 	)
 
 	if err != nil {
@@ -173,6 +173,6 @@ func generateOutputContainerSAS(config OutputConfig) (string, error) {
 
 	return outputBlobServiceClient.GenerateContainerSAS(
 		config.Storage.ContainerName,
-		azblob.ContainerSASPermissions{Delete: true, Read: true, Write: true},
+		sas.ContainerPermissions{Delete: true, Read: true, Write: true},
 	)
 }

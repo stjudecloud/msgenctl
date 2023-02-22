@@ -5,7 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Azure/azure-storage-blob-go/azblob"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -19,7 +20,7 @@ func TestBlobServiceClientGenerateBlobSAS(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	permissions := azblob.BlobSASPermissions{Read: true}
+	permissions := sas.BlobPermissions{Read: true}
 	rawSAS, err := blobServiceClient.GenerateBlobSAS("test", "in.bam", permissions)
 
 	if err != nil {
@@ -53,7 +54,7 @@ func TestBlobServiceClientGenerateContainerSAS(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	permissions := azblob.ContainerSASPermissions{Delete: true, Read: true, Write: true}
+	permissions := sas.ContainerPermissions{Delete: true, Read: true, Write: true}
 	rawSAS, err := blobServiceClient.GenerateContainerSAS("test", permissions)
 
 	if err != nil {
@@ -87,8 +88,8 @@ func TestEncodeOrdered(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	values := azblob.BlobSASSignatureValues{}
-	queryParams, err := values.NewSASQueryParameters(credential)
+	values := sas.BlobSignatureValues{}
+	queryParams, err := values.SignWithSharedKey(credential)
 
 	if err != nil {
 		t.Fatal(err)
