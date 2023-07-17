@@ -24,6 +24,7 @@ func TestSubmitConfigFromFlags(t *testing.T) {
 	includeLog := flags.Bool("output-include-log", true, "")
 	flags.String("emit-ref-confidence", "", "")
 	bgzipOutput := flags.Bool("bgzip-output", false, "")
+	ignoreAzureRegion := flags.Bool("ignore-azure-region", false, "")
 
 	args := []string{
 		"--base-url", "https://example.com",
@@ -41,6 +42,7 @@ func TestSubmitConfigFromFlags(t *testing.T) {
 		"--output-include-log",
 		"--emit-ref-confidence", "GVCF",
 		"--bgzip-output",
+		"--ignore-azure-region",
 	}
 
 	if err := flags.Parse(args); err != nil {
@@ -85,6 +87,7 @@ func TestSubmitConfigFromFlags(t *testing.T) {
 			EmitRefConfidence: ReferenceConfidenceModeGVCF,
 			BgzipOutput:       *bgzipOutput,
 		},
+		IgnoreAzureRegion: *ignoreAzureRegion,
 	}
 
 	if diff := cmp.Diff(actual, expected); len(diff) != 0 {

@@ -131,6 +131,7 @@ func buildSubmitWorkflowPayload(config SubmitConfig) (NewWorkflow, error) {
 		GATKEmitRefConfidence: config.OptionalArgs.EmitRefConfidence,
 		BgzipOutput:           config.OptionalArgs.BgzipOutput,
 	}
+	newWorkflow.IgnoreAzureRegion = config.IgnoreAzureRegion
 
 	return newWorkflow, nil
 }

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+  * cmd/submit: Add flag to ingore region mismatches between the
+    input/output storage containers and service (`--ignore-azure-region`).
+
 ## 0.3.0 - 2021-10-20
 
 ### Added

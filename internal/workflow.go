@@ -11,7 +11,7 @@ const StorageKindAzureBlockBlob = "AZURE_BLOCK_BLOB"
 
 type ReferenceConfidenceMode string
 
-/// https://gatk.broadinstitute.org/hc/en-us/articles/4404604697243-HaplotypeCaller#--emit-ref-confidence
+// / https://gatk.broadinstitute.org/hc/en-us/articles/4404604697243-HaplotypeCaller#--emit-ref-confidence
 const (
 	ReferenceConfidenceModeNone         = "NONE"
 	ReferenceConfidenceModeBPResolution = "BP_RESOLUTION"
@@ -88,4 +88,5 @@ type NewWorkflow struct {
 	OutputStorageType StorageKind
 	OutputArgs        NewWorkflowOutputArgs
 	OptionalArgs      NewWorkflowOptionalArgs
+	IgnoreAzureRegion bool
 }

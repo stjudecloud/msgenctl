@@ -48,7 +48,8 @@ type SubmitConfig struct {
 
 	Output OutputConfig
 
-	OptionalArgs OptionalArgsConfig
+	OptionalArgs      OptionalArgsConfig
+	IgnoreAzureRegion bool
 }
 
 func SubmitConfigFromFlags(flags *pflag.FlagSet) (SubmitConfig, error) {
@@ -101,6 +102,14 @@ func SubmitConfigFromFlags(flags *pflag.FlagSet) (SubmitConfig, error) {
 	}
 
 	config.OptionalArgs = optionalArgsConfig
+
+	ignoreAzureRegion, err := flags.GetBool("ignore-azure-region")
+
+	if err != nil {
+		return config, err
+	}
+
+	config.IgnoreAzureRegion = ignoreAzureRegion
 
 	return config, nil
 }

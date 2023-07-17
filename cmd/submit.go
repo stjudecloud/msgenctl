@@ -43,6 +43,8 @@ func init() {
 	)
 	flags.Bool("bgzip-output", false, "compress VCF/GVCF files with bgzip")
 
+	flags.Bool("ignore-azure-region", false, "allow data and service to be in different regions")
+
 	rootCmd.AddCommand(submitCmd)
 }
 

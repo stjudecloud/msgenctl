@@ -148,6 +148,7 @@ func TestBuildSubmitWorkflowPayload(t *testing.T) {
 			EmitRefConfidence: ReferenceConfidenceModeGVCF,
 			BgzipOutput:       true,
 		},
+		IgnoreAzureRegion: true,
 	}
 
 	actual, err := buildSubmitWorkflowPayload(config)
@@ -182,6 +183,7 @@ func TestBuildSubmitWorkflowPayload(t *testing.T) {
 			GATKEmitRefConfidence: config.OptionalArgs.EmitRefConfidence,
 			BgzipOutput:           config.OptionalArgs.BgzipOutput,
 		},
+		IgnoreAzureRegion: config.IgnoreAzureRegion,
 	}
 
 	if diff := cmp.Diff(actual, expected); len(diff) != 0 {
