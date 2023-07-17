@@ -92,6 +92,3 @@ msgenctl cancel --base-url $MSGEN_BASE_URL --access-key $MSGEN_ACCESS_KEY <workf
 
   * Input (`--input-blob-name`) is expected to be a single BAM blob. A SAS is
     automatically generated for it.
-
-  * The input Azure Storage account must be in the same region as the Microsoft
-    Genomics service (`--base-url`).
