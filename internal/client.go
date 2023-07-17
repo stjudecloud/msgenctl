@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/http/httputil"
 	"time"
 
 	"github.com/hashicorp/go-retryablehttp"
@@ -103,7 +104,14 @@ func (c *Client) do(request *retryablehttp.Request) (*http.Response, error) {
 		return response, nil
 	} else {
 		zap.S().Error(status)
-		return nil, fmt.Errorf(response.Status)
+
+		res, err := httputil.DumpResponse(response, true)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return nil, fmt.Errorf(string(res))
 	}
 }
 
