@@ -4,6 +4,7 @@ import (
 	"net/url"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
@@ -88,7 +89,14 @@ func TestEncodeOrdered(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	values := sas.BlobSignatureValues{}
+	expiryTime := time.Now().UTC()
+	permissions := sas.BlobPermissions{Read: true}
+
+	values := sas.BlobSignatureValues{
+		ExpiryTime:  expiryTime,
+		Permissions: permissions.String(),
+	}
+
 	queryParams, err := values.SignWithSharedKey(credential)
 
 	if err != nil {
