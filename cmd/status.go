@@ -2,11 +2,11 @@ package cmd
 
 import (
 	"fmt"
+	"log/slog"
 	"strconv"
 
 	"github.com/spf13/cobra"
 	"github.com/stjudecloud/msgenctl/internal"
-	"go.uber.org/zap"
 )
 
 var statusCmd = &cobra.Command{
@@ -38,7 +38,7 @@ func status(cmd *cobra.Command, args []string) error {
 
 		workflowID := internal.WorkflowID(rawWorkflowID)
 
-		zap.S().Infow("status", "workflowID", workflowID)
+		slog.Info("status", "workflowID", workflowID)
 
 		workflow, err := internal.FetchWorkflow(client, workflowID)
 
@@ -48,7 +48,7 @@ func status(cmd *cobra.Command, args []string) error {
 
 		printWorkflow(workflow)
 	} else {
-		zap.S().Infow("status", "workflowID", "*")
+		slog.Info("status", "workflowID", "*")
 
 		workflows, err := internal.FetchWorkflows(client)
 

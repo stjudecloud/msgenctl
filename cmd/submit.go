@@ -2,10 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"log/slog"
 
 	"github.com/spf13/cobra"
 	"github.com/stjudecloud/msgenctl/internal"
-	"go.uber.org/zap"
 )
 
 var submitCmd = &cobra.Command{
@@ -55,7 +55,7 @@ func submit(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	zap.S().Infow("submit", "description", config.Description)
+	slog.Info("submit", "description", config.Description)
 
 	client := internal.NewClient(config.Service.BaseURL, config.Service.AccessKey)
 	workflow, err := internal.SubmitWorkflow(client, config)

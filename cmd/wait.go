@@ -2,13 +2,13 @@ package cmd
 
 import (
 	"fmt"
+	"log/slog"
 	"strconv"
 	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/stjudecloud/msgenctl/internal"
-	"go.uber.org/zap"
 )
 
 var waitCmd = &cobra.Command{
@@ -49,8 +49,7 @@ func wait(cmd *cobra.Command, args []string) error {
 
 	workflowID := internal.WorkflowID(rawWorkflowID)
 
-	logger := zap.S().With("workflowID", workflowID)
-	logger.Info("wait")
+	slog.Info("wait", "workflowID", workflowID)
 
 	client := internal.NewClient(config.BaseURL, config.AccessKey)
 
@@ -61,7 +60,7 @@ func wait(cmd *cobra.Command, args []string) error {
 			return err
 		}
 
-		logger.Infow("wait", "status", workflow.Status, "message", workflow.Message)
+		slog.Info("wait", "workflowID", workflowID, "status", workflow.Status, "message", workflow.Message)
 
 		switch workflow.Status {
 		case internal.StatusSuccess:

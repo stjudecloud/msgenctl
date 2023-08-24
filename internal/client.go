@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/http/httputil"
 	"time"
 
 	"github.com/hashicorp/go-retryablehttp"
-	"go.uber.org/zap"
 )
 
 const httpClientTimeout = 20 * time.Second
@@ -23,7 +23,7 @@ type Client struct {
 func NewClient(baseURL string, accessKey string) Client {
 	httpClient := retryablehttp.NewClient()
 	httpClient.HTTPClient.Timeout = httpClientTimeout
-	httpClient.Logger = newLeveledLogger()
+	httpClient.Logger = slog.Default()
 
 	return Client{
 		httpClient: httpClient,
@@ -36,7 +36,7 @@ func (c *Client) Delete(endpoint string) (*http.Response, error) {
 	method := http.MethodDelete
 	url := c.buildURL(endpoint)
 
-	zap.S().Infof("%s %s", method, url)
+	slog.Info("request", "method", method, "url", url)
 
 	request, err := retryablehttp.NewRequest(method, url, nil)
 
@@ -51,7 +51,7 @@ func (c *Client) Get(endpoint string) (*http.Response, error) {
 	method := http.MethodGet
 	url := c.buildURL(endpoint)
 
-	zap.S().Infof("%s %s", method, url)
+	slog.Info("request", "method", method, "url", url)
 
 	request, err := retryablehttp.NewRequest(method, url, nil)
 
@@ -66,8 +66,8 @@ func (c *Client) Post(endpoint string, data interface{}) (*http.Response, error)
 	method := http.MethodPost
 	url := c.buildURL(endpoint)
 
-	zap.S().Infof("%s %s", method, url)
-	zap.S().Debugw("POST request payload", "data", data)
+	slog.Info("request", "method", method, "url", url)
+	slog.Debug("POST request payload", "data", data)
 
 	payload, err := json.Marshal(data)
 
@@ -100,10 +100,10 @@ func (c *Client) do(request *retryablehttp.Request) (*http.Response, error) {
 	status := fmt.Sprintf("%s %s", response.Proto, response.Status)
 
 	if response.StatusCode == http.StatusOK {
-		zap.S().Info(status)
+		slog.Info(status)
 		return response, nil
 	} else {
-		zap.S().Error(status)
+		slog.Error(status)
 
 		res, err := httputil.DumpResponse(response, true)
 
@@ -119,31 +119,4 @@ func addHeaders(headers *http.Header, accessKey string) {
 	headers.Add("Content-Type", "application/json")
 	headers.Add("User-Agent", fmt.Sprintf("msgenctl/%v", Version))
 	headers.Add("Ocp-Apim-Subscription-Key", accessKey)
-}
-
-// leveledLogger wraps `zap.SugaredLogger` to be used by `retryablehttp.Client`.
-type leveledLogger struct {
-	logger *zap.SugaredLogger
-}
-
-func newLeveledLogger() leveledLogger {
-	return leveledLogger{logger: zap.S()}
-}
-
-// impl retryablehttp.LeveledLogger
-
-func (l leveledLogger) Error(msg string, keysAndValues ...interface{}) {
-	l.logger.Errorw(msg, keysAndValues...)
-}
-
-func (l leveledLogger) Warn(msg string, keysAndValues ...interface{}) {
-	l.logger.Warnw(msg, keysAndValues...)
-}
-
-func (l leveledLogger) Info(msg string, keysAndValues ...interface{}) {
-	l.logger.Infow(msg, keysAndValues...)
-}
-
-func (l leveledLogger) Debug(msg string, keysAndValues ...interface{}) {
-	l.logger.Debugw(msg, keysAndValues...)
 }

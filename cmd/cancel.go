@@ -1,11 +1,11 @@
 package cmd
 
 import (
+	"log/slog"
 	"strconv"
 
 	"github.com/spf13/cobra"
 	"github.com/stjudecloud/msgenctl/internal"
-	"go.uber.org/zap"
 )
 
 var cancelCmd = &cobra.Command{
@@ -36,7 +36,7 @@ func cancel(cmd *cobra.Command, args []string) error {
 
 	workflowID := internal.WorkflowID(rawWorkflowID)
 
-	zap.S().Infow("cancel", "workflowID", workflowID)
+	slog.Info("cancel", "workflowID", workflowID)
 
 	workflow, err := internal.CancelWorkflow(client, workflowID)
 
