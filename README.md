@@ -70,7 +70,7 @@ msgenctl submit \
 msgenctl status --base-url $MSGEN_BASE_URL --access-key $MSGEN_ACCESS_KEY <workflow-id>
 ```
 
-#### Show the statuses of all workflow
+#### Show the statuses of all workflows
 
 ```sh
 msgenctl status --base-url $MSGEN_BASE_URL --access-key $MSGEN_ACCESS_KEY
