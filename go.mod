@@ -1,6 +1,6 @@
 module github.com/stjudecloud/msgenctl
 
-go 1.21
+go 1.22
 
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/storage/azblob v1.3.0
